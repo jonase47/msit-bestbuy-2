@@ -2,7 +2,7 @@
 
 import pytest
 
-from products import Product
+from products import LimitedProduct, NonStockedProduct, Product
 
 
 def test_creating_prod():
@@ -52,3 +52,54 @@ def test_buy_too_much():
         product.buy(101)
 
     assert product.get_quantity() == 100
+
+
+def test_creating_prod_wrong_types():
+    """A wrong type for name, price or quantity raises a TypeError."""
+    with pytest.raises(TypeError):
+        Product(123, price=1450, quantity=100)
+
+    with pytest.raises(TypeError):
+        Product("MacBook Air M2", price="1450", quantity=100)
+
+    with pytest.raises(TypeError):
+        Product("MacBook Air M2", price=1450, quantity=1.5)
+
+
+def test_non_stocked_prod_has_no_quantity():
+    """A non-stocked product has quantity 0 and is still active."""
+    product = NonStockedProduct("Windows License", price=125)
+
+    assert product.get_quantity() == 0
+    assert product.is_active()
+
+
+def test_non_stocked_prod_can_always_be_bought():
+    """Buying a non-stocked product works for any amount and keeps quantity 0."""
+    product = NonStockedProduct("Windows License", price=125)
+
+    total_price = product.buy(1000)
+
+    assert total_price == 125000
+    assert product.get_quantity() == 0
+    assert product.is_active()
+
+
+def test_limited_prod_within_limit():
+    """A limited product can be bought up to its maximum."""
+    product = LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+
+    total_price = product.buy(1)
+
+    assert total_price == 10
+    assert product.get_quantity() == 249
+
+
+def test_limited_prod_over_limit():
+    """Buying more than the maximum raises an exception and changes nothing."""
+    product = LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+
+    with pytest.raises(ValueError):
+        product.buy(2)
+
+    assert product.get_quantity() == 250
