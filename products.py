@@ -83,6 +83,18 @@ class Product:
             f"Promotion: {self.get_promotion_name()}"
         )
 
+    def __gt__(self, other):
+        """Return True if this product is more expensive than the other."""
+        if not isinstance(other, Product):
+            return NotImplemented
+        return self.price > other.price
+
+    def __lt__(self, other):
+        """Return True if this product is cheaper than the other."""
+        if not isinstance(other, Product):
+            return NotImplemented
+        return self.price < other.price
+
     def check_purchase(self, quantity):
         """Raise an error if the given quantity cannot be bought.
 

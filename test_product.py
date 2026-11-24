@@ -116,3 +116,21 @@ def test_str_shows_product_details():
         "Windows License, Price: $125, Quantity: Unlimited, Promotion: None"
     )
     assert str(shipping) == "Shipping, Price: $10, Limited to 1 per order!, Promotion: None"
+
+
+def test_compare_products_by_price():
+    """Products are compared by their price with > and <."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+
+    assert mac > bose
+    assert bose < mac
+    assert not mac < bose
+
+
+def test_compare_product_with_number_fails():
+    """Comparing a product with something else raises a TypeError."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+
+    with pytest.raises(TypeError):
+        assert mac > 1000
