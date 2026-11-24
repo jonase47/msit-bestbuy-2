@@ -53,7 +53,7 @@ class Product:
 
     def show(self):
         """Print the product to the console."""
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        print(f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}")
 
     def check_purchase(self, quantity):
         """Raise an error if the given quantity cannot be bought.
@@ -67,6 +67,10 @@ class Product:
             raise ValueError(f"{self.name} is not active and cannot be bought.")
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than 0.")
+        self.check_stock(quantity)
+
+    def check_stock(self, quantity):
+        """Raise a ValueError if there is not enough stock for the quantity."""
         if quantity > self.quantity:
             raise ValueError(
                 f"Not enough in stock: {self.quantity} available, {quantity} requested."
@@ -80,3 +84,30 @@ class Product:
         # Use the setter so the product gets deactivated when sold out
         self.set_quantity(self.quantity - quantity)
         return float(total_price)
+
+
+class NonStockedProduct(Product):
+    """A product without stock, e.g. a software license.
+
+    Its quantity is always 0 and it can be bought in any amount.
+    """
+
+    def __init__(self, name, price):
+        super().__init__(name, price, quantity=0)
+
+    def set_quantity(self, quantity):
+        """The quantity of a non-stocked product always stays 0."""
+        if quantity != 0:
+            raise ValueError(f"{self.name} is not stocked, its quantity stays 0.")
+
+    def check_stock(self, quantity):
+        """Non-stocked products never run out, so there is nothing to check."""
+
+    def show(self):
+        """Print the product to the console."""
+        print(f"{self.name}, Price: ${self.price}, Quantity: Unlimited")
+
+    def buy(self, quantity):
+        """Buy the given quantity and return the total price."""
+        self.check_purchase(quantity)
+        return float(self.price * quantity)
