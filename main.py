@@ -20,15 +20,15 @@ def list_products(store_obj):
 def make_order(store_obj):
     """Ask the user for products and quantities, then place the order."""
     active_products = list_products(store_obj)
-    print("Wenn du die Bestellung abschließen willst, drücke einfach Enter.")
+    print("When you want to finish order, enter empty text.")
 
     shopping_list = []
     while True:
         # Check every input right away: an empty input ends the order
-        product_input = input("Welche Produktnummer möchtest du? ").strip()
+        product_input = input("Which product # do you want? ").strip()
         if not product_input:
             break
-        amount_input = input("Welche Menge möchtest du? ").strip()
+        amount_input = input("What amount do you want? ").strip()
         if not amount_input:
             break
 
@@ -36,25 +36,25 @@ def make_order(store_obj):
             product_index = int(product_input) - 1
             amount = int(amount_input)
         except ValueError:
-            print("Bitte gib nur Zahlen ein.")
+            print("Please enter numbers only.")
             continue
 
         if product_index < 0 or product_index >= len(active_products):
-            print("Diese Produktnummer gibt es nicht.")
+            print("This product number does not exist.")
             continue
 
         shopping_list.append((active_products[product_index], amount))
-        print("Produkt zur Liste hinzugefügt!\n")
+        print("Product added to list!\n")
 
     if len(shopping_list) == 0:
-        print("Keine Produkte bestellt.")
+        print("No products ordered.")
         return
 
     try:
         total_price = store_obj.order(shopping_list)
-        print(f"********\nBestellung erfolgreich! Gesamtpreis: {total_price} Dollar.")
+        print(f"********\nOrder made! Total payment: ${total_price}")
     except ValueError as error:
-        print(f"Fehler bei der Bestellung: {error}")
+        print(f"Error while making order! {error}")
 
 
 def start(store_obj):
@@ -79,7 +79,7 @@ def start(store_obj):
             print("Bye!")
             break
         else:
-            print("Ungültige Eingabe, bitte wähle 1 bis 4.")
+            print("Invalid choice, please choose a number from 1 to 4.")
 
 
 def main():

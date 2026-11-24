@@ -14,7 +14,7 @@ class Store:
     def remove_product(self, product):
         """Remove a product from the store."""
         if product not in self.products:
-            raise ValueError(f"{product.name} ist nicht im Store.")
+            raise ValueError(f"{product.name} is not in the store.")
         self.products.remove(product)
 
     def get_total_quantity(self):
@@ -38,6 +38,6 @@ class Store:
         total_price = 0.0
         for product, quantity in shopping_list:
             if product not in self.products:
-                raise ValueError(f"{product.name} ist nicht im Store.")
+                raise ValueError(f"{product.name} is not in the store.")
             total_price += product.buy(quantity)
         return total_price

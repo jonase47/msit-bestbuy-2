@@ -6,11 +6,11 @@ class Product:
 
     def __init__(self, name, price, quantity):
         if not name or not name.strip():
-            raise ValueError("Name darf nicht leer sein.")
+            raise ValueError("Name must not be empty.")
         if price < 0:
-            raise ValueError("Preis darf nicht negativ sein.")
+            raise ValueError("Price must not be negative.")
         if quantity < 0:
-            raise ValueError("Menge darf nicht negativ sein.")
+            raise ValueError("Quantity must not be negative.")
 
         self.name = name
         self.price = price
@@ -24,7 +24,7 @@ class Product:
     def set_quantity(self, quantity):
         """Set the stock quantity; deactivate the product at 0."""
         if quantity < 0:
-            raise ValueError("Menge darf nicht negativ sein.")
+            raise ValueError("Quantity must not be negative.")
         self.quantity = quantity
         if self.quantity == 0:
             self.deactivate()
@@ -48,12 +48,12 @@ class Product:
     def buy(self, quantity):
         """Buy the given quantity and return the total price."""
         if not self.active:
-            raise ValueError(f"{self.name} ist nicht aktiv und kann nicht gekauft werden.")
+            raise ValueError(f"{self.name} is not active and cannot be bought.")
         if quantity <= 0:
-            raise ValueError("Kaufmenge muss größer als 0 sein.")
+            raise ValueError("Quantity to buy must be greater than 0.")
         if quantity > self.quantity:
             raise ValueError(
-                f"Nicht genug auf Lager: {self.quantity} verfügbar, {quantity} angefragt."
+                f"Not enough in stock: {self.quantity} available, {quantity} requested."
             )
 
         total_price = self.price * quantity
