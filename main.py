@@ -50,7 +50,15 @@ def make_order(store_obj: store.Store) -> None:
             print("This product number does not exist.")
             continue
 
-        shopping_list.append((active_products[product_index], amount))
+        product = active_products[product_index]
+        # Check the position right away, so the user gets direct feedback
+        try:
+            product.check_purchase(amount)
+        except ValueError as error:
+            print(f"Error adding product! {error}\n")
+            continue
+
+        shopping_list.append((product, amount))
         print("Product added to list!\n")
 
     if len(shopping_list) == 0:
