@@ -24,10 +24,12 @@ def make_order(store_obj):
 
     shopping_list = []
     while True:
-        product_input = input("Welche Produktnummer möchtest du? ")
-        amount_input = input("Welche Menge möchtest du? ")
-
-        if product_input == "" or amount_input == "":
+        # Check every input right away: an empty input ends the order
+        product_input = input("Welche Produktnummer möchtest du? ").strip()
+        if not product_input:
+            break
+        amount_input = input("Welche Menge möchtest du? ").strip()
+        if not amount_input:
             break
 
         try:
