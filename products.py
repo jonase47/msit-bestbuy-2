@@ -111,3 +111,27 @@ class NonStockedProduct(Product):
         """Buy the given quantity and return the total price."""
         self.check_purchase(quantity)
         return float(self.price * quantity)
+
+
+class LimitedProduct(Product):
+    """A product that can only be bought a limited number of times per order."""
+
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        if not isinstance(maximum, int):
+            raise TypeError("Maximum must be a whole number.")
+        if maximum < 1:
+            raise ValueError("Maximum must be at least 1.")
+        self.maximum = maximum
+
+    def check_purchase(self, quantity):
+        """Raise an error if the quantity cannot be bought or is over the limit."""
+        super().check_purchase(quantity)
+        if quantity > self.maximum:
+            raise ValueError(
+                f"{self.name} is limited to {self.maximum} per order, {quantity} requested."
+            )
+
+    def show(self):
+        """Print the product to the console."""
+        print(f"{self.name}, Price: ${self.price}, Limited to {self.maximum} per order!")
