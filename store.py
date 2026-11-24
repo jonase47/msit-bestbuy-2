@@ -1,18 +1,30 @@
 """Store class that holds and manages products."""
 
+from products import Product
+
 
 class Store:
     """A store containing a list of products."""
 
     def __init__(self, product_list):
+        if not isinstance(product_list, list):
+            raise TypeError("Product list must be a list.")
+        for product in product_list:
+            if not isinstance(product, Product):
+                raise TypeError("Product list must only contain products.")
+        # Copy the list so later changes outside do not affect the store
         self.products = list(product_list)
 
     def add_product(self, product):
         """Add a product to the store."""
+        if not isinstance(product, Product):
+            raise TypeError("Only products can be added to the store.")
         self.products.append(product)
 
     def remove_product(self, product):
         """Remove a product from the store."""
+        if not isinstance(product, Product):
+            raise TypeError("Only products can be removed from the store.")
         if product not in self.products:
             raise ValueError(f"{product.name} is not in the store.")
         self.products.remove(product)
@@ -45,6 +57,8 @@ class Store:
         for product, quantity in shopping_list:
             if product not in self.products:
                 raise ValueError(f"{product.name} is not in the store.")
+            if not isinstance(quantity, int):
+                raise TypeError("Quantity to buy must be a whole number.")
             if quantity <= 0:
                 raise ValueError("Quantity to buy must be greater than 0.")
             requested[product] = requested.get(product, 0) + quantity

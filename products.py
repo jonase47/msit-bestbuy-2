@@ -5,7 +5,15 @@ class Product:
     """A product type with name, price, stock quantity and active status."""
 
     def __init__(self, name, price, quantity):
-        if not name or not name.strip():
+        # Check the type first (TypeError), then the value (ValueError)
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string.")
+        if not isinstance(price, (int, float)):
+            raise TypeError("Price must be a number.")
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity must be a whole number.")
+
+        if not name.strip():
             raise ValueError("Name must not be empty.")
         if price < 0:
             raise ValueError("Price must not be negative.")
@@ -23,6 +31,8 @@ class Product:
 
     def set_quantity(self, quantity):
         """Set the stock quantity; deactivate the product at 0."""
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity must be a whole number.")
         if quantity < 0:
             raise ValueError("Quantity must not be negative.")
         self.quantity = quantity
@@ -46,11 +56,13 @@ class Product:
         print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
 
     def check_purchase(self, quantity):
-        """Raise a ValueError if the given quantity cannot be bought.
+        """Raise an error if the given quantity cannot be bought.
 
         Only checks, changes nothing. This lets the store validate a
         whole order before the first product is actually bought.
         """
+        if not isinstance(quantity, int):
+            raise TypeError("Quantity to buy must be a whole number.")
         if not self.active:
             raise ValueError(f"{self.name} is not active and cannot be bought.")
         if quantity <= 0:
