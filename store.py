@@ -18,10 +18,11 @@ class Store:
         self.products.remove(product)
 
     def get_total_quantity(self):
-        """Return the total number of items in the store."""
+        """Return the total number of items of all active products."""
         total = 0
         for product in self.products:
-            total += product.get_quantity()
+            if product.is_active():
+                total += product.get_quantity()
         return total
 
     def get_all_products(self):
