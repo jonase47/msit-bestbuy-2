@@ -15,6 +15,20 @@ class Store:
         # Copy the list so later changes outside do not affect the store
         self.products = list(product_list)
 
+    def __contains__(self, product):
+        """Return True if the product is in the store (product in store)."""
+        return product in self.products
+
+    def __add__(self, other):
+        """Return a new store with the products of both stores (store + store)."""
+        if not isinstance(other, Store):
+            return NotImplemented
+        combined_products = list(self.products)
+        for product in other.products:
+            if product not in combined_products:
+                combined_products.append(product)
+        return Store(combined_products)
+
     def add_product(self, product):
         """Add a product to the store."""
         if not isinstance(product, Product):

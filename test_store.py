@@ -84,3 +84,32 @@ def test_order_rejects_product_not_in_store():
 
     with pytest.raises(ValueError):
         store.order([(pixel, 1)])
+
+
+def test_product_in_store():
+    """The in operator checks if a product is part of the store."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+    pixel = Product("Google Pixel 7", price=500, quantity=250)
+    store = Store([mac])
+
+    assert mac in store
+    assert pixel not in store
+
+
+def test_add_two_stores():
+    """Adding two stores returns a new store with the products of both."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+    pixel = Product("Google Pixel 7", price=500, quantity=250)
+    first_store = Store([mac, bose])
+    second_store = Store([bose, pixel])
+
+    combined_store = first_store + second_store
+
+    assert mac in combined_store
+    assert bose in combined_store
+    assert pixel in combined_store
+    assert len(combined_store.get_all_products()) == 3
+    # The original stores stay unchanged
+    assert pixel not in first_store
+    assert mac not in second_store
