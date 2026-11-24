@@ -51,9 +51,17 @@ def make_order(store_obj: store.Store) -> None:
             continue
 
         product = active_products[product_index]
-        # Check the position right away, so the user gets direct feedback
+        # Amount of this product that is already on the shopping list
+        amount_in_list = 0
+        for listed_product, listed_amount in shopping_list:
+            if listed_product is product:
+                amount_in_list += listed_amount
+
+        # Check the position right away, so the user gets direct feedback:
+        # first the new amount alone, then together with the list so far
         try:
             product.check_purchase(amount)
+            product.check_purchase(amount_in_list + amount)
         except ValueError as error:
             print(f"Error adding product! {error}\n")
             continue
