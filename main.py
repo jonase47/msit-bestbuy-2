@@ -17,6 +17,11 @@ def list_products(store_obj):
     return active_products
 
 
+def show_total(store_obj):
+    """Print the total amount of items in the store."""
+    print(f"Total of {store_obj.get_total_quantity()} items in store")
+
+
 def make_order(store_obj):
     """Ask the user for products and quantities, then place the order."""
     active_products = list_products(store_obj)
@@ -57,6 +62,14 @@ def make_order(store_obj):
         print(f"Error while making order! {error}")
 
 
+# Dispatch table: menu choice -> function that handles it
+MENU_ACTIONS = {
+    "1": list_products,
+    "2": show_total,
+    "3": make_order,
+}
+
+
 def start(store_obj):
     """Show the main menu until the user quits."""
     while True:
@@ -67,19 +80,17 @@ def start(store_obj):
         print("3. Make an order")
         print("4. Quit")
 
-        choice = input("Please choose a number: ")
+        choice = input("Please choose a number: ").strip()
 
-        if choice == "1":
-            list_products(store_obj)
-        elif choice == "2":
-            print(f"Total of {store_obj.get_total_quantity()} items in store")
-        elif choice == "3":
-            make_order(store_obj)
-        elif choice == "4":
+        if choice == "4":
             print("Bye!")
             break
-        else:
+
+        action = MENU_ACTIONS.get(choice)
+        if action is None:
             print("Invalid choice, please choose a number from 1 to 4.")
+        else:
+            action(store_obj)
 
 
 def main():
