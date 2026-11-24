@@ -11,8 +11,7 @@ def list_products(store_obj):
     active_products = store_obj.get_all_products()
     number = 1
     for product in active_products:
-        print(f"{number}. ", end="")
-        product.show()
+        print(f"{number}. {product}")
         number += 1
     print("------")
     return active_products

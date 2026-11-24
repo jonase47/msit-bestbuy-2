@@ -76,9 +76,9 @@ class Product:
             return float(self.price * quantity)
         return self.promotion.apply_promotion(self, quantity)
 
-    def show(self):
-        """Print the product to the console."""
-        print(
+    def __str__(self):
+        """Return the product as text, so that print(product) works."""
+        return (
             f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}, "
             f"Promotion: {self.get_promotion_name()}"
         )
@@ -131,9 +131,9 @@ class NonStockedProduct(Product):
     def check_stock(self, quantity):
         """Non-stocked products never run out, so there is nothing to check."""
 
-    def show(self):
-        """Print the product to the console."""
-        print(
+    def __str__(self):
+        """Return the product as text, so that print(product) works."""
+        return (
             f"{self.name}, Price: ${self.price}, Quantity: Unlimited, "
             f"Promotion: {self.get_promotion_name()}"
         )
@@ -163,9 +163,9 @@ class LimitedProduct(Product):
                 f"{self.name} is limited to {self.maximum} per order, {quantity} requested."
             )
 
-    def show(self):
-        """Print the product to the console."""
-        print(
+    def __str__(self):
+        """Return the product as text, so that print(product) works."""
+        return (
             f"{self.name}, Price: ${self.price}, Limited to {self.maximum} per order!, "
             f"Promotion: {self.get_promotion_name()}"
         )

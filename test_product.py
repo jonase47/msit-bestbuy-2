@@ -103,3 +103,16 @@ def test_limited_prod_over_limit():
         product.buy(2)
 
     assert product.get_quantity() == 250
+
+
+def test_str_shows_product_details():
+    """str() returns the text that print() shows for each product type."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+    license_key = NonStockedProduct("Windows License", price=125)
+    shipping = LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+
+    assert str(mac) == "MacBook Air M2, Price: $1450, Quantity: 100, Promotion: None"
+    assert str(license_key) == (
+        "Windows License, Price: $125, Quantity: Unlimited, Promotion: None"
+    )
+    assert str(shipping) == "Shipping, Price: $10, Limited to 1 per order!, Promotion: None"
