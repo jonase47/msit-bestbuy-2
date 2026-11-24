@@ -1,11 +1,13 @@
 """Command-line interface for the Best Buy store."""
 
+from collections.abc import Callable
+
 import products
 import promotions
 import store
 
 
-def list_products(store_obj):
+def list_products(store_obj: store.Store) -> list[products.Product]:
     """Print all active products numbered and return them."""
     print("------")
     active_products = store_obj.get_all_products()
@@ -17,12 +19,12 @@ def list_products(store_obj):
     return active_products
 
 
-def show_total(store_obj):
+def show_total(store_obj: store.Store) -> None:
     """Print the total amount of items in the store."""
     print(f"Total of {store_obj.get_total_quantity()} items in store")
 
 
-def make_order(store_obj):
+def make_order(store_obj: store.Store) -> None:
     """Ask the user for products and quantities, then place the order."""
     active_products = list_products(store_obj)
     print("When you want to finish order, enter empty text.")
@@ -63,14 +65,14 @@ def make_order(store_obj):
 
 
 # Dispatch table: menu choice -> function that handles it
-MENU_ACTIONS = {
+MENU_ACTIONS: dict[str, Callable[[store.Store], object]] = {
     "1": list_products,
     "2": show_total,
     "3": make_order,
 }
 
 
-def start(store_obj):
+def start(store_obj: store.Store) -> None:
     """Show the main menu until the user quits."""
     while True:
         print("\n   Store Menu")
@@ -93,7 +95,7 @@ def start(store_obj):
             action(store_obj)
 
 
-def main():
+def main() -> None:
     """Create the initial inventory and start the store menu."""
     # setup initial stock of inventory
     product_list = [

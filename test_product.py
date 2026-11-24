@@ -5,7 +5,7 @@ import pytest
 from products import LimitedProduct, NonStockedProduct, Product
 
 
-def test_creating_prod():
+def test_creating_prod() -> None:
     """A normal product is created with the given values and is active."""
     product = Product("MacBook Air M2", price=1450, quantity=100)
 
@@ -15,7 +15,7 @@ def test_creating_prod():
     assert product.active
 
 
-def test_creating_prod_invalid_details():
+def test_creating_prod_invalid_details() -> None:
     """An empty name or a negative price raises an exception."""
     with pytest.raises(ValueError):
         Product("", price=1450, quantity=100)
@@ -24,7 +24,7 @@ def test_creating_prod_invalid_details():
         Product("MacBook Air M2", price=-10, quantity=100)
 
 
-def test_prod_becomes_inactive():
+def test_prod_becomes_inactive() -> None:
     """A product becomes inactive when its quantity reaches 0."""
     product = Product("MacBook Air M2", price=1450, quantity=5)
 
@@ -34,7 +34,7 @@ def test_prod_becomes_inactive():
     assert not product.active
 
 
-def test_buy_modifies_quantity():
+def test_buy_modifies_quantity() -> None:
     """Buying reduces the quantity and returns the total price."""
     product = Product("MacBook Air M2", price=1450, quantity=100)
 
@@ -44,7 +44,7 @@ def test_buy_modifies_quantity():
     assert product.quantity == 97
 
 
-def test_buy_too_much():
+def test_buy_too_much() -> None:
     """Buying more than the stock raises an exception and changes nothing."""
     product = Product("MacBook Air M2", price=1450, quantity=100)
 
@@ -54,19 +54,19 @@ def test_buy_too_much():
     assert product.quantity == 100
 
 
-def test_creating_prod_wrong_types():
+def test_creating_prod_wrong_types() -> None:
     """A wrong type for name, price or quantity raises a TypeError."""
     with pytest.raises(TypeError):
-        Product(123, price=1450, quantity=100)
+        Product(123, price=1450, quantity=100)  # type: ignore[arg-type]
 
     with pytest.raises(TypeError):
-        Product("MacBook Air M2", price="1450", quantity=100)
+        Product("MacBook Air M2", price="1450", quantity=100)  # type: ignore[arg-type]
 
     with pytest.raises(TypeError):
-        Product("MacBook Air M2", price=1450, quantity=1.5)
+        Product("MacBook Air M2", price=1450, quantity=1.5)  # type: ignore[arg-type]
 
 
-def test_non_stocked_prod_has_no_quantity():
+def test_non_stocked_prod_has_no_quantity() -> None:
     """A non-stocked product has quantity 0 and is still active."""
     product = NonStockedProduct("Windows License", price=125)
 
@@ -74,7 +74,7 @@ def test_non_stocked_prod_has_no_quantity():
     assert product.active
 
 
-def test_non_stocked_prod_can_always_be_bought():
+def test_non_stocked_prod_can_always_be_bought() -> None:
     """Buying a non-stocked product works for any amount and keeps quantity 0."""
     product = NonStockedProduct("Windows License", price=125)
 
@@ -85,7 +85,7 @@ def test_non_stocked_prod_can_always_be_bought():
     assert product.active
 
 
-def test_limited_prod_within_limit():
+def test_limited_prod_within_limit() -> None:
     """A limited product can be bought up to its maximum."""
     product = LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
 
@@ -95,7 +95,7 @@ def test_limited_prod_within_limit():
     assert product.quantity == 249
 
 
-def test_limited_prod_over_limit():
+def test_limited_prod_over_limit() -> None:
     """Buying more than the maximum raises an exception and changes nothing."""
     product = LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
 
@@ -105,7 +105,7 @@ def test_limited_prod_over_limit():
     assert product.quantity == 250
 
 
-def test_str_shows_product_details():
+def test_str_shows_product_details() -> None:
     """str() returns the text that print() shows for each product type."""
     mac = Product("MacBook Air M2", price=1450, quantity=100)
     license_key = NonStockedProduct("Windows License", price=125)
@@ -118,7 +118,7 @@ def test_str_shows_product_details():
     assert str(shipping) == "Shipping, Price: $10, Limited to 1 per order!, Promotion: None"
 
 
-def test_compare_products_by_price():
+def test_compare_products_by_price() -> None:
     """Products are compared by their price with > and <."""
     mac = Product("MacBook Air M2", price=1450, quantity=100)
     bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
@@ -128,7 +128,7 @@ def test_compare_products_by_price():
     assert not mac < bose
 
 
-def test_compare_product_with_number_fails():
+def test_compare_product_with_number_fails() -> None:
     """Comparing a product with something else raises a TypeError."""
     mac = Product("MacBook Air M2", price=1450, quantity=100)
 
@@ -136,7 +136,7 @@ def test_compare_product_with_number_fails():
         assert mac > 1000
 
 
-def test_price_setter_checks_value():
+def test_price_setter_checks_value() -> None:
     """Setting an invalid price raises an exception and keeps the old price."""
     mac = Product("MacBook Air M2", price=1450, quantity=100)
 
@@ -146,12 +146,12 @@ def test_price_setter_checks_value():
     assert mac.price == 1450
 
 
-def test_active_is_read_only():
+def test_active_is_read_only() -> None:
     """The active status can only be changed with activate() and deactivate()."""
     mac = Product("MacBook Air M2", price=1450, quantity=100)
 
     with pytest.raises(AttributeError):
-        mac.active = False
+        mac.active = False  # type: ignore[misc]
 
     mac.deactivate()
     assert not mac.active

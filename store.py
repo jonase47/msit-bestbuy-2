@@ -1,12 +1,14 @@
 """Store class that holds and manages products."""
 
+from __future__ import annotations
+
 from products import Product
 
 
 class Store:
     """A store containing a list of products."""
 
-    def __init__(self, product_list):
+    def __init__(self, product_list: list[Product]) -> None:
         if not isinstance(product_list, list):
             raise TypeError("Product list must be a list.")
         for product in product_list:
@@ -15,11 +17,11 @@ class Store:
         # Copy the list so later changes outside do not affect the store
         self.products = list(product_list)
 
-    def __contains__(self, product):
+    def __contains__(self, product: object) -> bool:
         """Return True if the product is in the store (product in store)."""
         return product in self.products
 
-    def __add__(self, other):
+    def __add__(self, other: object) -> Store:
         """Return a new store with the products of both stores (store + store)."""
         if not isinstance(other, Store):
             return NotImplemented
@@ -29,13 +31,13 @@ class Store:
                 combined_products.append(product)
         return Store(combined_products)
 
-    def add_product(self, product):
+    def add_product(self, product: Product) -> None:
         """Add a product to the store."""
         if not isinstance(product, Product):
             raise TypeError("Only products can be added to the store.")
         self.products.append(product)
 
-    def remove_product(self, product):
+    def remove_product(self, product: Product) -> None:
         """Remove a product from the store."""
         if not isinstance(product, Product):
             raise TypeError("Only products can be removed from the store.")
@@ -43,7 +45,7 @@ class Store:
             raise ValueError(f"{product.name} is not in the store.")
         self.products.remove(product)
 
-    def get_total_quantity(self):
+    def get_total_quantity(self) -> int:
         """Return the total number of items of all active products."""
         total = 0
         for product in self.products:
@@ -51,7 +53,7 @@ class Store:
                 total += product.quantity
         return total
 
-    def get_all_products(self):
+    def get_all_products(self) -> list[Product]:
         """Return all active products."""
         active_products = []
         for product in self.products:
@@ -59,7 +61,7 @@ class Store:
                 active_products.append(product)
         return active_products
 
-    def order(self, shopping_list):
+    def order(self, shopping_list: list[tuple[Product, int]]) -> float:
         """Buy a list of (product, quantity) tuples and return the total price.
 
         The order is all or nothing: every position is checked first,
@@ -67,7 +69,7 @@ class Store:
         """
         # Step 1: sum up the quantities per product, in case the same
         # product appears more than once in the shopping list
-        requested = {}
+        requested: dict[Product, int] = {}
         for product, quantity in shopping_list:
             if product not in self.products:
                 raise ValueError(f"{product.name} is not in the store.")

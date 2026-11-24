@@ -6,13 +6,13 @@ from products import NonStockedProduct, Product
 from promotions import PercentDiscount, Promotion, SecondHalfPrice, ThirdOneFree
 
 
-def test_promotion_is_abstract():
+def test_promotion_is_abstract() -> None:
     """The abstract class Promotion cannot be instantiated."""
     with pytest.raises(TypeError):
-        Promotion("General promotion")
+        Promotion("General promotion")  # type: ignore[abstract]
 
 
-def test_percent_discount():
+def test_percent_discount() -> None:
     """A percent discount reduces the total price by the percentage."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
     promotion = PercentDiscount("30% off!", percent=30)
@@ -20,7 +20,7 @@ def test_percent_discount():
     assert promotion.apply_promotion(product, 2) == 1400
 
 
-def test_percent_discount_invalid_percent():
+def test_percent_discount_invalid_percent() -> None:
     """A percentage below 0 or above 100 raises an exception."""
     with pytest.raises(ValueError):
         PercentDiscount("Too much", percent=120)
@@ -29,7 +29,7 @@ def test_percent_discount_invalid_percent():
         PercentDiscount("Negative", percent=-5)
 
 
-def test_second_half_price():
+def test_second_half_price() -> None:
     """Every second item costs half the price."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
     promotion = SecondHalfPrice("Second Half price!")
@@ -39,7 +39,7 @@ def test_second_half_price():
     assert promotion.apply_promotion(product, 3) == 2500
 
 
-def test_third_one_free():
+def test_third_one_free() -> None:
     """Every third item is free."""
     product = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
     promotion = ThirdOneFree("Third One Free!")
@@ -49,7 +49,7 @@ def test_third_one_free():
     assert promotion.apply_promotion(product, 4) == 750
 
 
-def test_buy_uses_promotion():
+def test_buy_uses_promotion() -> None:
     """Buying a product with a promotion returns the reduced price."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
     product.promotion = SecondHalfPrice("Second Half price!")
@@ -58,7 +58,7 @@ def test_buy_uses_promotion():
     assert product.quantity == 98
 
 
-def test_promotion_can_be_removed():
+def test_promotion_can_be_removed() -> None:
     """After removing the promotion the normal price applies again."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
     product.promotion = SecondHalfPrice("Second Half price!")
@@ -69,7 +69,7 @@ def test_promotion_can_be_removed():
     assert product.buy(2) == 2000
 
 
-def test_same_promotion_for_several_products():
+def test_same_promotion_for_several_products() -> None:
     """One promotion can be used for more than one product."""
     promotion = PercentDiscount("50% off!", percent=50)
     mac = Product("MacBook Air M2", price=1000, quantity=100)
