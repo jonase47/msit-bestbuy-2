@@ -47,15 +47,15 @@ class Store:
         """Return the total number of items of all active products."""
         total = 0
         for product in self.products:
-            if product.is_active():
-                total += product.get_quantity()
+            if product.active:
+                total += product.quantity
         return total
 
     def get_all_products(self):
         """Return all active products."""
         active_products = []
         for product in self.products:
-            if product.is_active():
+            if product.active:
                 active_products.append(product)
         return active_products
 

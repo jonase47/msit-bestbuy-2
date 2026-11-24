@@ -11,8 +11,8 @@ def test_creating_prod():
 
     assert product.name == "MacBook Air M2"
     assert product.price == 1450
-    assert product.get_quantity() == 100
-    assert product.is_active()
+    assert product.quantity == 100
+    assert product.active
 
 
 def test_creating_prod_invalid_details():
@@ -30,8 +30,8 @@ def test_prod_becomes_inactive():
 
     product.buy(5)
 
-    assert product.get_quantity() == 0
-    assert not product.is_active()
+    assert product.quantity == 0
+    assert not product.active
 
 
 def test_buy_modifies_quantity():
@@ -41,7 +41,7 @@ def test_buy_modifies_quantity():
     total_price = product.buy(3)
 
     assert total_price == 4350
-    assert product.get_quantity() == 97
+    assert product.quantity == 97
 
 
 def test_buy_too_much():
@@ -51,7 +51,7 @@ def test_buy_too_much():
     with pytest.raises(ValueError):
         product.buy(101)
 
-    assert product.get_quantity() == 100
+    assert product.quantity == 100
 
 
 def test_creating_prod_wrong_types():
@@ -70,8 +70,8 @@ def test_non_stocked_prod_has_no_quantity():
     """A non-stocked product has quantity 0 and is still active."""
     product = NonStockedProduct("Windows License", price=125)
 
-    assert product.get_quantity() == 0
-    assert product.is_active()
+    assert product.quantity == 0
+    assert product.active
 
 
 def test_non_stocked_prod_can_always_be_bought():
@@ -81,8 +81,8 @@ def test_non_stocked_prod_can_always_be_bought():
     total_price = product.buy(1000)
 
     assert total_price == 125000
-    assert product.get_quantity() == 0
-    assert product.is_active()
+    assert product.quantity == 0
+    assert product.active
 
 
 def test_limited_prod_within_limit():
@@ -92,7 +92,7 @@ def test_limited_prod_within_limit():
     total_price = product.buy(1)
 
     assert total_price == 10
-    assert product.get_quantity() == 249
+    assert product.quantity == 249
 
 
 def test_limited_prod_over_limit():
@@ -102,7 +102,7 @@ def test_limited_prod_over_limit():
     with pytest.raises(ValueError):
         product.buy(2)
 
-    assert product.get_quantity() == 250
+    assert product.quantity == 250
 
 
 def test_str_shows_product_details():
@@ -134,3 +134,24 @@ def test_compare_product_with_number_fails():
 
     with pytest.raises(TypeError):
         assert mac > 1000
+
+
+def test_price_setter_checks_value():
+    """Setting an invalid price raises an exception and keeps the old price."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+
+    with pytest.raises(ValueError):
+        mac.price = -100
+
+    assert mac.price == 1450
+
+
+def test_active_is_read_only():
+    """The active status can only be changed with activate() and deactivate()."""
+    mac = Product("MacBook Air M2", price=1450, quantity=100)
+
+    with pytest.raises(AttributeError):
+        mac.active = False
+
+    mac.deactivate()
+    assert not mac.active

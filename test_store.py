@@ -26,8 +26,8 @@ def test_order_returns_total_price():
     total_price = store.order([(mac, 1), (bose, 2)])
 
     assert total_price == 1950
-    assert mac.get_quantity() == 99
-    assert bose.get_quantity() == 498
+    assert mac.quantity == 99
+    assert bose.quantity == 498
 
 
 def test_order_is_all_or_nothing():
@@ -39,8 +39,8 @@ def test_order_is_all_or_nothing():
     with pytest.raises(ValueError):
         store.order([(mac, 1), (bose, 501)])
 
-    assert mac.get_quantity() == 100
-    assert bose.get_quantity() == 500
+    assert mac.quantity == 100
+    assert bose.quantity == 500
 
 
 def test_order_sums_up_same_product():
@@ -51,7 +51,7 @@ def test_order_sums_up_same_product():
     with pytest.raises(ValueError):
         store.order([(mac, 3), (mac, 3)])
 
-    assert mac.get_quantity() == 5
+    assert mac.quantity == 5
 
 
 def test_order_respects_limit_across_positions():
@@ -62,7 +62,7 @@ def test_order_respects_limit_across_positions():
     with pytest.raises(ValueError):
         store.order([(shipping, 1), (shipping, 1)])
 
-    assert shipping.get_quantity() == 250
+    assert shipping.quantity == 250
 
 
 def test_order_rejects_negative_quantity():
@@ -73,7 +73,7 @@ def test_order_rejects_negative_quantity():
     with pytest.raises(ValueError):
         store.order([(mac, 5), (mac, -2)])
 
-    assert mac.get_quantity() == 100
+    assert mac.quantity == 100
 
 
 def test_order_rejects_product_not_in_store():

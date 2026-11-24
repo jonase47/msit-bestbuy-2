@@ -7,62 +7,79 @@ class Product:
     """A product type with name, price, stock quantity and active status."""
 
     def __init__(self, name, price, quantity):
-        # Check the type first (TypeError), then the value (ValueError)
-        if not isinstance(name, str):
-            raise TypeError("Name must be a string.")
-        if not isinstance(price, (int, float)):
-            raise TypeError("Price must be a number.")
-        if not isinstance(quantity, int):
-            raise TypeError("Quantity must be a whole number.")
-
-        if not name.strip():
-            raise ValueError("Name must not be empty.")
-        if price < 0:
-            raise ValueError("Price must not be negative.")
-        if quantity < 0:
-            raise ValueError("Quantity must not be negative.")
-
+        self._active = True
+        self._promotion = None
+        # These assignments run through the property setters below,
+        # so every value is checked there
         self.name = name
         self.price = price
         self.quantity = quantity
-        self.active = True
-        self.promotion = None
 
-    def get_quantity(self):
-        """Return the stock quantity."""
-        return self.quantity
+    @property
+    def name(self):
+        """The name of the product."""
+        return self._name
 
-    def set_quantity(self, quantity):
-        """Set the stock quantity; deactivate the product at 0."""
+    @name.setter
+    def name(self, name):
+        # Check the type first (TypeError), then the value (ValueError)
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string.")
+        if not name.strip():
+            raise ValueError("Name must not be empty.")
+        self._name = name
+
+    @property
+    def price(self):
+        """The price of a single item."""
+        return self._price
+
+    @price.setter
+    def price(self, price):
+        if not isinstance(price, (int, float)):
+            raise TypeError("Price must be a number.")
+        if price < 0:
+            raise ValueError("Price must not be negative.")
+        self._price = price
+
+    @property
+    def quantity(self):
+        """The stock quantity; setting it to 0 deactivates the product."""
+        return self._quantity
+
+    @quantity.setter
+    def quantity(self, quantity):
         if not isinstance(quantity, int):
             raise TypeError("Quantity must be a whole number.")
         if quantity < 0:
             raise ValueError("Quantity must not be negative.")
-        self.quantity = quantity
-        if self.quantity == 0:
+        self._quantity = quantity
+        if self._quantity == 0:
             self.deactivate()
 
-    def is_active(self):
-        """Return True if the product is active."""
-        return self.active
+    @property
+    def active(self):
+        """True if the product is active (read-only, see activate/deactivate)."""
+        return self._active
 
     def activate(self):
         """Activate the product."""
-        self.active = True
+        self._active = True
 
     def deactivate(self):
         """Deactivate the product."""
-        self.active = False
+        self._active = False
 
-    def get_promotion(self):
-        """Return the current promotion, or None if there is none."""
-        return self.promotion
+    @property
+    def promotion(self):
+        """The current promotion, or None if there is none."""
+        return self._promotion
 
-    def set_promotion(self, promotion):
-        """Set the promotion of the product; None removes it."""
+    @promotion.setter
+    def promotion(self, promotion):
         if promotion is not None and not isinstance(promotion, Promotion):
             raise TypeError("Promotion must be a Promotion or None.")
-        self.promotion = promotion
+        self._promotion = promotion
 
     def get_promotion_name(self):
         """Return the name of the current promotion, or "None"."""
@@ -121,8 +138,8 @@ class Product:
         self.check_purchase(quantity)
 
         total_price = self.calculate_price(quantity)
-        # Use the setter so the product gets deactivated when sold out
-        self.set_quantity(self.quantity - quantity)
+        # The quantity setter deactivates the product when it is sold out
+        self.quantity -= quantity
         return total_price
 
 
@@ -135,8 +152,13 @@ class NonStockedProduct(Product):
     def __init__(self, name, price):
         super().__init__(name, price, quantity=0)
 
-    def set_quantity(self, quantity):
-        """The quantity of a non-stocked product always stays 0."""
+    @property
+    def quantity(self):
+        """The quantity of a non-stocked product is always 0."""
+        return 0
+
+    @quantity.setter
+    def quantity(self, quantity):
         if quantity != 0:
             raise ValueError(f"{self.name} is not stocked, its quantity stays 0.")
 

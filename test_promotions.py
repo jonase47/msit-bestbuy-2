@@ -52,20 +52,20 @@ def test_third_one_free():
 def test_buy_uses_promotion():
     """Buying a product with a promotion returns the reduced price."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
-    product.set_promotion(SecondHalfPrice("Second Half price!"))
+    product.promotion = SecondHalfPrice("Second Half price!")
 
     assert product.buy(2) == 1500
-    assert product.get_quantity() == 98
+    assert product.quantity == 98
 
 
 def test_promotion_can_be_removed():
     """After removing the promotion the normal price applies again."""
     product = Product("MacBook Air M2", price=1000, quantity=100)
-    product.set_promotion(SecondHalfPrice("Second Half price!"))
+    product.promotion = SecondHalfPrice("Second Half price!")
 
-    product.set_promotion(None)
+    product.promotion = None
 
-    assert product.get_promotion() is None
+    assert product.promotion is None
     assert product.buy(2) == 2000
 
 
@@ -74,8 +74,8 @@ def test_same_promotion_for_several_products():
     promotion = PercentDiscount("50% off!", percent=50)
     mac = Product("MacBook Air M2", price=1000, quantity=100)
     license_key = NonStockedProduct("Windows License", price=100)
-    mac.set_promotion(promotion)
-    license_key.set_promotion(promotion)
+    mac.promotion = promotion
+    license_key.promotion = promotion
 
     assert mac.buy(1) == 500
     assert license_key.buy(1) == 50
