@@ -34,10 +34,27 @@ class Store:
         return active_products
 
     def order(self, shopping_list):
-        """Buy a list of (product, quantity) tuples and return the total price."""
-        total_price = 0.0
+        """Buy a list of (product, quantity) tuples and return the total price.
+
+        The order is all or nothing: every position is checked first,
+        and only if all of them are fine the products are bought.
+        """
+        # Step 1: sum up the quantities per product, in case the same
+        # product appears more than once in the shopping list
+        requested = {}
         for product, quantity in shopping_list:
             if product not in self.products:
                 raise ValueError(f"{product.name} is not in the store.")
+            if quantity <= 0:
+                raise ValueError("Quantity to buy must be greater than 0.")
+            requested[product] = requested.get(product, 0) + quantity
+
+        # Step 2: check everything, nothing is changed yet
+        for product, quantity in requested.items():
+            product.check_purchase(quantity)
+
+        # Step 3: buy
+        total_price = 0.0
+        for product, quantity in requested.items():
             total_price += product.buy(quantity)
         return total_price

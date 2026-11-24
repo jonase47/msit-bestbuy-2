@@ -45,8 +45,12 @@ class Product:
         """Print the product to the console."""
         print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
 
-    def buy(self, quantity):
-        """Buy the given quantity and return the total price."""
+    def check_purchase(self, quantity):
+        """Raise a ValueError if the given quantity cannot be bought.
+
+        Only checks, changes nothing. This lets the store validate a
+        whole order before the first product is actually bought.
+        """
         if not self.active:
             raise ValueError(f"{self.name} is not active and cannot be bought.")
         if quantity <= 0:
@@ -55,6 +59,10 @@ class Product:
             raise ValueError(
                 f"Not enough in stock: {self.quantity} available, {quantity} requested."
             )
+
+    def buy(self, quantity):
+        """Buy the given quantity and return the total price."""
+        self.check_purchase(quantity)
 
         total_price = self.price * quantity
         # Use the setter so the product gets deactivated when sold out
