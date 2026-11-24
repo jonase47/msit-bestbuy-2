@@ -1,4 +1,6 @@
-"""Product class for the store."""
+"""Product classes for the store."""
+
+from promotions import Promotion
 
 
 class Product:
@@ -24,6 +26,7 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.active = True
+        self.promotion = None
 
     def get_quantity(self):
         """Return the stock quantity."""
@@ -51,9 +54,34 @@ class Product:
         """Deactivate the product."""
         self.active = False
 
+    def get_promotion(self):
+        """Return the current promotion, or None if there is none."""
+        return self.promotion
+
+    def set_promotion(self, promotion):
+        """Set the promotion of the product; None removes it."""
+        if promotion is not None and not isinstance(promotion, Promotion):
+            raise TypeError("Promotion must be a Promotion or None.")
+        self.promotion = promotion
+
+    def get_promotion_name(self):
+        """Return the name of the current promotion, or "None"."""
+        if self.promotion is None:
+            return "None"
+        return self.promotion.name
+
+    def calculate_price(self, quantity):
+        """Return the total price for the quantity, including a promotion."""
+        if self.promotion is None:
+            return float(self.price * quantity)
+        return self.promotion.apply_promotion(self, quantity)
+
     def show(self):
         """Print the product to the console."""
-        print(f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}")
+        print(
+            f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}, "
+            f"Promotion: {self.get_promotion_name()}"
+        )
 
     def check_purchase(self, quantity):
         """Raise an error if the given quantity cannot be bought.
@@ -80,10 +108,10 @@ class Product:
         """Buy the given quantity and return the total price."""
         self.check_purchase(quantity)
 
-        total_price = self.price * quantity
+        total_price = self.calculate_price(quantity)
         # Use the setter so the product gets deactivated when sold out
         self.set_quantity(self.quantity - quantity)
-        return float(total_price)
+        return total_price
 
 
 class NonStockedProduct(Product):
@@ -105,12 +133,15 @@ class NonStockedProduct(Product):
 
     def show(self):
         """Print the product to the console."""
-        print(f"{self.name}, Price: ${self.price}, Quantity: Unlimited")
+        print(
+            f"{self.name}, Price: ${self.price}, Quantity: Unlimited, "
+            f"Promotion: {self.get_promotion_name()}"
+        )
 
     def buy(self, quantity):
         """Buy the given quantity and return the total price."""
         self.check_purchase(quantity)
-        return float(self.price * quantity)
+        return self.calculate_price(quantity)
 
 
 class LimitedProduct(Product):
@@ -134,4 +165,7 @@ class LimitedProduct(Product):
 
     def show(self):
         """Print the product to the console."""
-        print(f"{self.name}, Price: ${self.price}, Limited to {self.maximum} per order!")
+        print(
+            f"{self.name}, Price: ${self.price}, Limited to {self.maximum} per order!, "
+            f"Promotion: {self.get_promotion_name()}"
+        )
